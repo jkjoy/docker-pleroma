@@ -15,7 +15,7 @@ services:
       - ./postgres:/var/lib/postgresql/data
 
   web:
-    image: pleroma
+    image: jkjoy/pleroma
     container_name: pleroma_web
     healthcheck:
       test:
@@ -23,14 +23,6 @@ services:
     restart: always
     ports:
       - "4000:4000"
-    build:
-      context: .
-      # Feel free to remove or override this section
-      # See 'Build-time variables' in README.md
-      args:
-        - "UID=1000"
-        - "GID=1000"
-        - "PLEROMA_VER=v2.4.2"
     volumes:
       - ./uploads:/var/lib/pleroma/uploads
       - ./static:/var/lib/pleroma/static
