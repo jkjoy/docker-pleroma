@@ -22,16 +22,12 @@ WORKDIR /pleroma
 
 # 克隆 Pleroma 仓库并切换到指定版本
 RUN git clone -b stable https://git.pleroma.social/pleroma/pleroma.git . && \
-    git checkout ${PLEROMA_VER}
-
-# 配置 Mix 并构建 Release
-RUN echo "import Mix.Config" > config/prod.secret.exs
-
-# 逐步安装依赖并构建 Release
-RUN mix local.hex --force && \
-    mix local.rebar --force && \
-    mix deps.get --only prod && \
-    mix release --path /pleroma
+    git checkout ${PLEROMA_VER} \
+    && echo "import Mix.Config" > config/prod.secret.exs \
+    && mix local.hex --force \
+    && mix local.rebar --force \
+    && mix deps.get --only prod \
+    && mix release --path /pleroma
 
 COPY ./config.exs /etc/pleroma/config.exs
 
