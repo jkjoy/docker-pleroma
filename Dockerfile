@@ -1,4 +1,5 @@
 FROM elixir:1.16.3-alpine
+
 ARG PLEROMA_VER=stable
 ARG UID=911
 ARG GID=911
@@ -8,7 +9,7 @@ RUN apk update &&  \
     apk add --no-cache \
         git gcc g++ musl-dev make cmake file-dev \
         exiftool imagemagick libmagic ncurses \
-        postgresql-client ffmpeg
+        postgresql-client ffmpeg openssl-dev
 
 RUN addgroup -g ${GID} pleroma && \
     adduser -h /pleroma -s /bin/false -D -G pleroma -u ${UID} pleroma
