@@ -1,41 +1,60 @@
+# 基础镜像
 FROM elixir:1.14-alpine
 
+# 构建参数
 ARG PLEROMA_VER=develop
 ARG UID=911
 ARG GID=911
 ENV MIX_ENV=prod
 
+# 添加 Alpine 源并安装依赖
 RUN echo "http://nl.alpinelinux.org/alpine/latest-stable/main" >> /etc/apk/repositories \
     && apk update \
     && apk upgrade \
-    && apk add git gcc g++ musl-dev make cmake file-dev \
-    exiftool imagemagick libmagic ncurses postgresql-client ffmpeg
+    && apk add --no-cache \
+        git \
+        gcc \
+        g++ \
+        musl-dev \
+        make \
+        cmake \
+        file-dev \
+        exiftool \
+        imagemagick \
+        libmagic \
+        ncurses \
+        postgresql-client \
+        ffmpeg
 
+# 创建用户和组
 RUN addgroup -g ${GID} pleroma \
     && adduser -h /pleroma -s /bin/false -D -G pleroma -u ${UID} pleroma
 
+# 创建必要的目录并设置权限
 ARG DATA=/var/lib/pleroma
-RUN mkdir -p /etc/pleroma \
-    && chown -R pleroma /etc/pleroma \
-    && mkdir -p ${DATA}/uploads \
-    && mkdir -p ${DATA}/static \
-    && chown -R pleroma ${DATA}
+RUN mkdir -p /etc/pleroma ${DATA}/uploads ${DATA}/static \
+    && chown -R pleroma:pleroma /etc/pleroma ${DATA}
 
+# 切换到 pleroma 用户
 USER pleroma
 WORKDIR /pleroma
 
-RUN git clone -b develop https://git.pleroma.social/pleroma/pleroma.git /pleroma \
+# 克隆 Pleroma 仓库并切换到指定版本
+RUN git clone -b stable https://git.pleroma.social/pleroma/pleroma.git . \
     && git checkout ${PLEROMA_VER}
 
+# 配置 Mix 并构建 Release
 RUN echo "import Mix.Config" > config/prod.secret.exs \
     && mix local.hex --force \
     && mix local.rebar --force \
     && mix deps.get --only prod \
-    && mkdir release \
     && mix release --path /pleroma
 
+# 复制配置文件
 COPY ./config.exs /etc/pleroma/config.exs
 
+# 暴露端口
 EXPOSE 4000
 
+# 设置入口点
 ENTRYPOINT ["/pleroma/docker-entrypoint.sh"]
