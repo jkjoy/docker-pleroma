@@ -6,7 +6,7 @@ ARG GID=911
 ENV MIX_ENV=prod
 
 # 更新并安装必要的依赖
-RUN apk update && apk upgrade && \
+RUN apk update &&  \
     apk add --no-cache \
         git gcc g++ musl-dev make cmake file-dev \
         exiftool imagemagick libmagic ncurses \
@@ -28,8 +28,8 @@ WORKDIR /pleroma
 # 克隆 Pleroma 仓库并切换到指定版本
 RUN git clone -b stable https://git.pleroma.social/pleroma/pleroma.git . && \
     git checkout ${PLEROMA_VER} && \
-    echo "import Mix.Config" > config/prod.secret.exs 
-RUN mix local.hex --force && \
+    echo "import Mix.Config" > config/prod.secret.exs && \
+    mix local.hex --force && \
     mix local.rebar --force && \
     mix deps.get --only prod && \
     mix release --path /pleroma
