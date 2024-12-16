@@ -1,11 +1,10 @@
-FROM elixir:1.15.8-otp-24-alpine
-
+FROM elixir:1.16.3-alpine
 ARG PLEROMA_VER=stable
 ARG UID=911
 ARG GID=911
 ENV MIX_ENV=prod
 
-RUN apk update && apk upgrade && \
+RUN apk update &&  \
     apk add --no-cache \
         git gcc g++ musl-dev make cmake file-dev \
         exiftool imagemagick libmagic ncurses \
