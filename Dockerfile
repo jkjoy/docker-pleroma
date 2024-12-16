@@ -1,6 +1,6 @@
-FROM elixir:1.14.4-alpine  # 使用较新版本的基础镜像
+FROM elixir:1.15.8-otp-24-alpine
 
-ARG PLEROMA_VER=develop
+ARG PLEROMA_VER=stable
 ARG UID=911
 ARG GID=911
 ENV MIX_ENV=prod
