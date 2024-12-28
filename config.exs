@@ -13,6 +13,8 @@ config :pleroma, :instance,
   federating: true,
   healthcheck: true
 
+config :pleroma, :configurable_from_database, true
+
 config :pleroma, :media_proxy,
   enabled: false,
   redirect_on_failure: true,
