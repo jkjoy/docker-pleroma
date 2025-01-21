@@ -17,6 +17,10 @@ jobs:
         run: |
           git clone https://git.pleroma.social/pleroma/pleroma.git pleroma
           cd pleroma
+          rm Dockerfile
+          wget https://blog.0tz.top/dockerfile/pleroma/Dockerfile
+          wget https://blog.0tz.top/dockerfile/pleroma/config.exs
+          
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -30,10 +34,11 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./pleroma  # 使用克隆的 Pleroma 代码作为构建上下文
+          context: ./pleroma
           push: true
           tags: jkjoy/pleroma:latest
           build-args: |
             ELIXIR_VER=1.14.5
             ERLANG_VER=25.3.2.14
             ALPINE_VER=3.17.9
+            
