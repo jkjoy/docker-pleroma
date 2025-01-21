@@ -32,7 +32,7 @@ jobs:
         with:
           context: ./pleroma  # 使用克隆的 Pleroma 代码作为构建上下文
           push: true
-          tags: your-dockerhub-username/pleroma:latest
+          tags: jkjoy/pleroma:latest
           build-args: |
             ELIXIR_VER=1.14.5
             ERLANG_VER=25.3.2.14
